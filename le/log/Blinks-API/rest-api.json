@@ -1,0 +1,457 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Blinks API v0.4",
+    "version": "0.4",
+    "title": "Blinks API",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "info@rtlsnet.ru"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/receiver",
+  "tags": [],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "paths": {
+    "/tag": {
+      "post": {
+        "summary": "Tag state changes",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Pet object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tag_states_list"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "513": {
+            "$ref": "#/definitions/error"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basicAuth": {
+      "type": "basic"
+    }
+  },
+  "definitions": {
+    "sensor_status": {
+      "type": "string",
+      "enum": [
+        "FAIL",
+        "UNDEF",
+        "OK"
+      ],
+      "description": "sensor common value"
+    },
+    "sensors": {
+      "description": "full supported sensors list, could be empty",
+      "properties": {
+        "uid64": {
+          "type": "string",
+          "description": "uint64 in decimal format"
+        },
+        "uid64_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "fuel0": {
+          "type": "number",
+          "format": "int16"
+        },
+        "fuel0_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "fuel1": {
+          "type": "number",
+          "format": "int16"
+        },
+        "fuel1_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "fuel2": {
+          "type": "number",
+          "format": "int16"
+        },
+        "fuel2_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "fuel3": {
+          "type": "number",
+          "format": "int16"
+        },
+        "fuel3_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "fuel4": {
+          "type": "number",
+          "format": "int16"
+        },
+        "fuel4_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "fuel5": {
+          "type": "number",
+          "format": "int16"
+        },
+        "fuel5_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "fuel6": {
+          "type": "number",
+          "format": "int16"
+        },
+        "fuel6_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "fuel7": {
+          "type": "number",
+          "format": "int16"
+        },
+        "fuel7_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "temperature": {
+          "type": "number",
+          "format": "int16"
+        },
+        "temperature_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "voltage_bat": {
+          "type": "number",
+          "format": "int32"
+        },
+        "voltage_bat_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "ignition": {
+          "type": "string",
+          "enum": [
+            "FAIL",
+            "UNDEF",
+            "OFF",
+            "ON"
+          ]
+        },
+        "hardware_state": {
+          "type": "string",
+          "enum": [
+            "FAIL",
+            "UNDEF",
+            "OK"
+          ]
+        },
+        "battery_state": {
+          "type": "string",
+          "enum": [
+            "FAIL",
+            "UNDEF",
+            "OFF",
+            "LOW",
+            "MID",
+            "GOOD"
+          ]
+        },
+        "charger_state": {
+          "type": "string",
+          "enum": [
+            "FAIL",
+            "UNDEF",
+            "IDLE",
+            "ACTIVE",
+            "SUSPENDED"
+          ]
+        },
+        "power_source": {
+          "type": "string",
+          "enum": [
+            "FAIL",
+            "UNDEF",
+            "BATTERY",
+            "EXTERNAL"
+          ]
+        },
+        "impact_fall": {
+          "type": "string",
+          "enum": [
+            "FAIL",
+            "UNDEF",
+            "NORMAL",
+            "FREE_FALL",
+            "IMPACT"
+          ]
+        },
+        "orientation": {
+          "type": "string",
+          "enum": [
+            "FAIL",
+            "UNDEF",
+            "ZH",
+            "ZL",
+            "YH",
+            "YL",
+            "XH",
+            "XL"
+          ]
+        },
+        "in_adc0": {
+          "type": "number",
+          "format": "int32"
+        },
+        "in_adc0_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "in_adc1": {
+          "type": "number",
+          "format": "int32"
+        },
+        "in_adc1_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "in_adc2": {
+          "type": "number",
+          "format": "int32"
+        },
+        "in_adc2_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "in_adc3": {
+          "type": "number",
+          "format": "int32"
+        },
+        "in_adc3_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "in_adc4": {
+          "type": "number",
+          "format": "int32"
+        },
+        "in_adc4_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "in_adc5": {
+          "type": "number",
+          "format": "int32"
+        },
+        "in_adc5_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "in_adc6": {
+          "type": "number",
+          "format": "int32"
+        },
+        "in_adc6_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "in_adc7": {
+          "type": "number",
+          "format": "int32"
+        },
+        "in_adc7_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "button0": {
+          "type": "number",
+          "format": "int32"
+        },
+        "button0_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "button1": {
+          "type": "number",
+          "format": "int32"
+        },
+        "button1_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "button2": {
+          "type": "number",
+          "format": "int32"
+        },
+        "button2_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "button3": {
+          "type": "number",
+          "format": "int32"
+        },
+        "button3_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "button4": {
+          "type": "number",
+          "format": "int32"
+        },
+        "button4_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "button5": {
+          "type": "number",
+          "format": "int32"
+        },
+        "button5_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "button6": {
+          "type": "number",
+          "format": "int32"
+        },
+        "button6_state": {
+          "$ref": "#/definitions/sensor_status"
+        },
+        "button7": {
+          "type": "number",
+          "format": "int32"
+        },
+        "button7_state": {
+          "$ref": "#/definitions/sensor_status"
+        }
+      }
+    },
+    "tag_state": {
+      "properties": {
+        "sn": {
+          "type": "number",
+          "format": "int32",
+          "description": "Tag SN"
+        },
+        "time": {
+          "type": "string",
+          "example": "1970-01-01T03:00:00.000+03:00",
+          "format": "date-time",
+          "description": "Blink time in ISO 8601 format: 1970-01-01T03:00:00.000+03:00"
+        },
+        "site_id": {
+          "type": "number",
+          "format": "int32",
+          "description": "Could be provided to skip nearest map check"
+        },
+        "le_status": {
+          "type": "string",
+          "enum": [
+            "HEALTH",
+            "TRACKING",
+            "NO_SIGNAL"
+          ],
+          "description": "Status of tag, HEALTH means, that tag is active, TRACKING means, that engine failed to calculate reliable tag coordinate, NO_SIGNAL means that there was no signal from tag for some time"
+        },
+        "motion": {
+          "type": "string",
+          "enum": [
+            "MOTION",
+            "IDLE"
+          ],
+          "description": "Tag motion value"
+        },
+        "solution": {
+          "type": "string",
+          "example": "RTLS_SOLVER",
+          "description": "Name of engine (or solution) with which this coordinate coordinate was calculated"
+        },
+        "x": {
+          "type": "number",
+          "format": "real",
+          "description": "X coordinate in anchors coordinate system, in meters"
+        },
+        "y": {
+          "type": "number",
+          "format": "real",
+          "description": "Y coordinate in anchors coordinate system, in meters"
+        },
+        "z": {
+          "type": "number",
+          "format": "real",
+          "description": "Z coordinate in anchors coordinate system, in meters"
+        },
+        "lon": {
+          "type": "number",
+          "format": "real",
+          "description": "longitude, for GPS solver only"
+        },
+        "lat": {
+          "type": "number",
+          "format": "real",
+          "description": "latitude, for GPS solver only"
+        },
+        "alt": {
+          "type": "number",
+          "format": "real",
+          "description": "altitude of tag, in meters, for GPS solver only"
+        },
+        "accuracy": {
+          "type": "number",
+          "format": "real",
+          "description": "Coordinate accuracy, in meters"
+        },
+        "kinematic": {
+          "type": "number",
+          "format": "Tag movement velocity, in meters/secs"
+        },
+        "sensors": {
+          "$ref": "#/definitions/sensors"
+        }
+      },
+      "required": [
+        "sn",
+        "time",
+        "le_status"
+      ]
+    },
+    "tag_states_list": {
+      "properties": {
+        "elements_count": {
+          "type": "number",
+          "format": "int"
+        },
+        "element_last": {
+          "type": "number",
+          "format": "int"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tag_state"
+          }
+        }
+      },
+      "required": [
+        "elements_count",
+        "element_last",
+        "items"
+      ]
+    },
+    "error": {
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "descr": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

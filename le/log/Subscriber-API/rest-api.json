@@ -1,0 +1,127 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Subscriber API",
+    "version": "0.4",
+    "title": "Subscriber API",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "info@rtlsnet.ru"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/LE/observe",
+  "tags": [],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "paths": {
+    "/tag": {
+      "post": {
+        "summary": "Subscribe for tag updates",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/observe_command"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscribtion renewed"
+          },
+          "201": {
+            "description": "Subscribtion created"
+          },
+          "513": {
+            "$ref": "#/definitions/error"
+          }
+        }
+      }
+    },
+    "/anchor": {
+      "post": {
+        "summary": "Subscribe for anchor updates",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/observe_command"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscribtion renewed"
+          },
+          "201": {
+            "description": "Subscribtion created"
+          },
+          "513": {
+            "$ref": "#/definitions/error"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basicAuth": {
+      "type": "basic"
+    }
+  },
+  "definitions": {
+    "observe_command": {
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL where tag updates will be sent via HTTP POST requests",
+          "example": "https://example.com/receiver/updates"
+        },
+        "cert": {
+          "type": "string",
+          "description": "Path to the client certificate which will be used by LE when sending requests. Path is relative to le config directory",
+          "example": "./client-cert.crt"
+        },
+        "key": {
+          "type": "string",
+          "description": "Required if you use cer option. Path to the private key for client certificate. Path is relative to le config directory",
+          "example": "./client-key.key"
+        },
+        "passphrase": {
+          "type": "string",
+          "description": "Password for the private key for client certificate. Only needed if you have encrypted private key",
+          "example": "changeit"
+        },
+        "ca_cert": {
+          "description": "Path to CA certificate which will be used by LE to verify subscriber server sertificate. Needed if subscriber URL uses HTTPS. Path is relative to le config directory",
+          "example": "./ca-cert.cert"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "error": {
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "descr": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

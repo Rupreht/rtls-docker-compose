@@ -1,0 +1,241 @@
+# Configuration to start whole application
+
+version: '2.1'
+services:
+  le:
+    restart: always
+    image: repo.rtlsnet.ru:5000/le:v4.2.1
+    environment:
+      - USER_UID=${UID:-1000}
+      - USER_GID=${UID:-1000}
+      - TZ=${TZ:-Europe/Moscow}
+      - LE_LOG=/opt/le/log
+      - LE_CONFIG=/opt/le/config
+      - LE_LIB=/opt/le/lib
+    ports:
+      - 17320:17320/udp
+      - 17321:17321/udp
+      - 5683:5683/udp
+      - 8320:8320/tcp
+    volumes:
+      - ./le/log:/opt/le/log:Z
+      - ./le/config:/opt/le/config:Z
+      - ./le/lib:/opt/le/lib:Z
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: "5"
+    hostname: le.rtls
+    networks:
+      rtls-net:
+        aliases:
+         - le.rtls
+#      rtls-emulator-net-0:
+#        ipv4_address: 10.0.1.2
+#      rtls-emulator-net-1:
+#        ipv4_address: 10.1.1.2
+#      rtls-emulator-net-2:
+#        ipv4_address: 10.2.1.2
+#      rtls-emulator-net-3:
+#        ipv4_address: 10.3.1.2
+#      rtls-emulator-net-4:
+#        ipv4_address: 10.4.1.2
+#      rtls-emulator-net-5:
+#        ipv4_address: 10.5.1.2
+  srv:
+    restart: always
+    image: repo.rtlsnet.ru:5000/srv:v4.2.1
+    environment:
+      - USER_UID=${UID:-1000}
+      - USER_GID=${UID:-1000}
+      - TZ=${TZ:-Europe/Moscow}
+      - DEPLOY_OPT=
+      - GEOSERVER_DATA=/opt/jboss/geoserver-data
+      - EXPORT_DIR=/opt/jboss/export
+      - SQL_DIR=/opt/jboss/sql
+      - LAUNCH_JBOSS_IN_BACKGROUND=true
+      - JBOSS_USER=admin
+      - JBOSS_PASSWORD=rTl$$adm1n
+      - POSTGRES_HOST=postgres.rtls
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - ROLE_NAME=rtls_pu
+      - ROLE_PASSWORD=rtls_pu
+      - SCHEMA_NAME=rtls_pu
+      - JBOSS_XMS=1024m
+      - JBOSS_XMX=1024m
+      - JBOSS_MAX_PERM_SIZE=256m
+      - JBOSS_LAUNCH_PARAMS=-Drtls.https.m2m.port=8444
+       -Drtls.export.dir=$$EXPORT_DIR
+        -Dmail.smtp.host=smtp.gmail.com
+         -Dmail.smtp.port=587
+          -Dmail.smtp.auth=true
+           -Dmail.smtp.starttls.enable=true
+            -Dmail.smtp.from=ci@rtlsnet.ru
+             -Drtls.mssql.host=localhost
+              -Drtls.mssql.port=1433
+               -Drtls.mssql.database=MSSQLSERVER
+                -Drtls.mssql.user=user
+                 -Drtls.mssql.password=password
+    ports:
+      - 443:8443/tcp
+      - 80:8080/tcp
+      - 9443:9443/tcp
+      - 8300:8081/tcp
+    volumes:
+      - ./srv/standalone.conf:/opt/jboss/jboss-eap-6.3/bin/standalone.conf
+      - ./srv/log:/opt/jboss/jboss-eap-6.3/standalone/log:Z
+      - ./srv/config:/opt/jboss/jboss-eap-6.3/standalone/configuration:Z
+      - ./srv/lib:/opt/jboss/jboss-eap-6.3/standalone/deployments:Z
+      - ./srv/sql:/opt/jboss/sql:Z
+      - ./srv/geoserver-data:/opt/jboss/geoserver-data:Z
+      - ./srv/export:/opt/jboss/export:Z
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: "5"
+    hostname: srv.rtls
+    networks:
+      rtls-net:
+        aliases:
+         - srv.rtls
+  postgres:
+    restart: always
+    image: repo.rtlsnet.ru:5000/postgres:9.4
+    environment:
+      - USER_UID=${UID:-1000}
+      - USER_GID=${UID:-1000}
+      - TZ=${TZ:-Europe/Moscow}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_INITDB_ARGS=--lc-collate=C.utf8 --lc-ctype=C.utf8
+    volumes:
+      - ./postgres:/var/lib/postgresql/data:Z
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: "5"
+    hostname: postgres.rtls
+    networks:
+      rtls-net:
+        aliases:
+         - postgres.rtls
+#  actobus:
+#    restart: always
+#    image: repo.rtlsnet.ru:5000/actobus:changeit
+#    environment:
+#      - USER_UID=${UID:-1000}
+#      - USER_GID=${UID:-1000}
+#      - TZ=${TZ:-Europe/Moscow}
+#    ports:
+#      - 8420:8420/tcp
+#    volumes:
+#      - ./actobus/config:/opt/actobus/config:Z
+#      - ./actobus/lib:/opt/actobus/lib:Z
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 100m
+#        max-file: "5"
+#    hostname: actobus.rtls
+#    networks:
+#      rtls-net:
+#        aliases:
+#          - actobus.rtls
+#  redis:
+#    restart: always
+#    image: repo.rtlsnet.ru:5000/redis:5
+#    environment:
+#      - USER_UID=${UID:-1000}
+#      - USER_GID=${UID:-1000}
+#      - TZ=${TZ:-Europe/Moscow}
+#    volumes:
+#      - ./redis/config:/opt/redis/config:Z
+#      - ./redis/data:/opt/redis/data:Z
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 100m
+#        max-file: "5"
+#    hostname: redis.rtls
+#    networks:
+#      rtls-net:
+#        aliases:
+#          - redis.rtls
+#  emulator:
+#    image: repo.rtlsnet.ru:5000/emulator:changeit
+#    environment:
+#      - EMULATOR_CONFIG=/opt/emulator/cfg.yml
+#    volumes:
+#      - ./emulator/cfg.yml:/opt/emulator/cfg.yml:Z
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 100m
+#        max-file: "5"
+#    user: "1000"
+#    networks:
+#      rtls-emulator-net-0:
+#        ipv4_address: 10.0.1.3
+#      rtls-emulator-net-1:
+#        ipv4_address: 10.1.1.3
+#      rtls-emulator-net-2:
+#        ipv4_address: 10.2.1.3
+#      rtls-emulator-net-3:
+#        ipv4_address: 10.3.1.3
+#      rtls-emulator-net-4:
+#        ipv4_address: 10.4.1.3
+#      rtls-emulator-net-5:
+#        ipv4_address: 10.5.1.3
+networks:
+  rtls-net:
+    driver: bridge
+#  rtls-emulator-net-0:
+#    driver: bridge
+#    ipam:
+#      config:
+#      -
+#        subnet: 10.0.1.0/24
+#        gateway: 10.0.1.1
+#  rtls-emulator-net-1:
+#    driver: bridge
+#    ipam:
+#      config:
+#      -
+#        subnet: 10.1.1.0/24
+#        gateway: 10.1.1.1
+#  rtls-emulator-net-2:
+#    driver: bridge
+#    ipam:
+#      config:
+#        -
+#          subnet: 10.2.1.0/24
+#          gateway: 10.2.1.1
+#  rtls-emulator-net-3:
+#    driver: bridge
+#    ipam:
+#      config:
+#        -
+#          subnet: 10.3.1.0/24
+#          gateway: 10.3.1.1
+#  rtls-emulator-net-4:
+#    driver: bridge
+#    ipam:
+#      config:
+#      -
+#        subnet: 10.4.1.0/24
+#        gateway: 10.4.1.1
+#  rtls-emulator-net-5:
+#    driver: bridge
+#    ipam:
+#      config:
+#      -
+#        subnet: 10.5.1.0/24
+#        gateway: 10.5.1.1
