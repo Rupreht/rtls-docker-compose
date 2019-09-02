@@ -1,10 +1,24 @@
 # Configuration to start whole application
 
 version: '2.1'
+volumes:
+  lelog: {}
+  leconfig: {}
+  lelib: {}
+  srvstandaloneconf: {}
+  srvlog: {}
+  srvconfig: {}
+  srvlib: {}
+  srvsql: {}
+  srvgeoserverdata: {}
+  srvexport: {}
+  postgres: {}
+
 services:
   le:
     restart: always
-    image: repo.rtlsnet.ru:5000/le:v4.2.1
+    build: ./le
+#    image: repo.rtlsnet.ru:5000/le:v4.2.1
     environment:
       - USER_UID=${UID:-1000}
       - USER_GID=${UID:-1000}
@@ -18,9 +32,9 @@ services:
       - 5683:5683/udp
       - 8320:8320/tcp
     volumes:
-      - ./le/log:/opt/le/log:Z
-      - ./le/config:/opt/le/config:Z
-      - ./le/lib:/opt/le/lib:Z
+      - lelog:/opt/le/log:Z
+      - leconfig:/opt/le/config:Z
+      - lelib:/opt/le/lib:Z
     logging:
       driver: json-file
       options:
@@ -45,7 +59,8 @@ services:
 #        ipv4_address: 10.5.1.2
   srv:
     restart: always
-    image: repo.rtlsnet.ru:5000/srv:v4.2.1
+#    image: repo.rtlsnet.ru:5000/srv:v4.2.1
+    build: ./srv
     environment:
       - USER_UID=${UID:-1000}
       - USER_GID=${UID:-1000}
@@ -86,13 +101,13 @@ services:
       - 9443:9443/tcp
       - 8300:8081/tcp
     volumes:
-      - ./srv/standalone.conf:/opt/jboss/jboss-eap-6.3/bin/standalone.conf
-      - ./srv/log:/opt/jboss/jboss-eap-6.3/standalone/log:Z
-      - ./srv/config:/opt/jboss/jboss-eap-6.3/standalone/configuration:Z
-      - ./srv/lib:/opt/jboss/jboss-eap-6.3/standalone/deployments:Z
-      - ./srv/sql:/opt/jboss/sql:Z
-      - ./srv/geoserver-data:/opt/jboss/geoserver-data:Z
-      - ./srv/export:/opt/jboss/export:Z
+      - srvstandaloneconf:/opt/jboss/jboss-eap-6.3/bin
+      - srvlog:/opt/jboss/jboss-eap-6.3/standalone/log:Z
+      - srvconfig:/opt/jboss/jboss-eap-6.3/standalone/configuration:Z
+      - srvlib:/opt/jboss/jboss-eap-6.3/standalone/deployments:Z
+      - srvsql:/opt/jboss/sql:Z
+      - srvgeoserverdata:/opt/jboss/geoserver-data:Z
+      - srvexport:/opt/jboss/export:Z
     logging:
       driver: json-file
       options:
@@ -116,7 +131,7 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_INITDB_ARGS=--lc-collate=C.utf8 --lc-ctype=C.utf8
     volumes:
-      - ./postgres:/var/lib/postgresql/data:Z
+      - postgres:/var/lib/postgresql/data:Z
     logging:
       driver: json-file
       options:
@@ -174,7 +189,7 @@ services:
 #    environment:
 #      - EMULATOR_CONFIG=/opt/emulator/cfg.yml
 #    volumes:
-#      - ./emulator/cfg.yml:/opt/emulator/cfg.yml:Z
+#      - emulatorcfg:/opt/emulator:Z
 #    logging:
 #      driver: json-file
 #      options:
