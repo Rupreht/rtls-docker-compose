@@ -4,7 +4,8 @@ Be careful because if directories structure is not present when starting docker-
  containers fail to start or start withh errors
 
 Usages:
-1. Change "image" field in docker-compose.yml for srv and le containers to prefered
+1.1 Login docker login repo.rtlsnet.ru:5000
+1.2 Change "image" field in docker-compose.yml for srv and le containers to prefered
  system version (tag name is identical with branch name)
 2. run "docker-compose up -d" in this directory
 
